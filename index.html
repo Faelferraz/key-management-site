@@ -104,13 +104,23 @@
       color: white;
     }
 
-    .btn-success {
-      background: #16a34a;
+    .btn-red {
+      background: #dc2626;
       color: white;
     }
 
-    .btn-warning {
-      background: #d97706;
+    .btn-yellow {
+      background: #facc15;
+      color: #111827;
+    }
+
+    .btn-orange {
+      background: #ea580c;
+      color: white;
+    }
+
+    .btn-green {
+      background: #16a34a;
       color: white;
     }
 
@@ -127,29 +137,36 @@
     }
 
     .message {
+      min-height: 48px;
+      margin-top: -8px;
       margin-bottom: 20px;
       padding: 14px;
       border-radius: 8px;
-      display: none;
+      visibility: hidden;
+      opacity: 0;
       font-weight: bold;
+      transition: opacity 0.2s ease;
     }
 
     .message.success {
-      display: block;
+      visibility: visible;
+      opacity: 1;
       background: #dcfce7;
       color: #166534;
       border: 1px solid #86efac;
     }
 
     .message.error {
-      display: block;
+      visibility: visible;
+      opacity: 1;
       background: #fee2e2;
       color: #991b1b;
       border: 1px solid #fecaca;
     }
 
     .message.info {
-      display: block;
+      visibility: visible;
+      opacity: 1;
       background: #dbeafe;
       color: #1e40af;
       border: 1px solid #93c5fd;
@@ -271,8 +288,6 @@
       </p>
     </header>
 
-    <div id="messageBox" class="message"></div>
-
     <section class="summary-grid">
       <div class="summary-box">
         <span>Total de imóveis/chaves</span>
@@ -317,16 +332,18 @@
       </div>
 
       <div class="toolbar">
-        <button class="btn-success" onclick="showFreeKeys()">Ver tudo livre</button>
-        <button class="btn-warning" onclick="showUsedKeys()">Ver tudo ocupado</button>
-        <button class="btn-secondary" onclick="showAllKeys()">Ver todas as chaves</button>
-        <button class="btn-secondary" onclick="loadAllData()">Atualizar dados</button>
+        <button class="btn-red" onclick="loadAllData()">Atualizar tudo</button>
+        <button class="btn-yellow" onclick="showAllKeys()">Ver todas as chaves</button>
+        <button class="btn-orange" onclick="showUsedKeys()">Ver tudo ocupado</button>
+        <button class="btn-green" onclick="showFreeKeys()">Ver todas chaves livres</button>
       </div>
 
       <p class="small-text">
         Para RFID, você pode digitar com ou sem o prefixo <strong>RFID_</strong>. Exemplo: <strong>14A1B2C3D4E5F1</strong> ou <strong>RFID_14A1B2C3D4E5F1</strong>.
       </p>
     </section>
+
+    <div id="messageBox" class="message"></div>
 
     <section class="card" id="employeeResultCard" style="display: none;">
       <h2>Resultado de funcionário</h2>
@@ -433,7 +450,7 @@
       box.textContent = text;
 
       setTimeout(() => {
-        box.className = "message";
+          box.className = "message";
         box.textContent = "";
       }, 5000);
     }
