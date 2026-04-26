@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestão de Chaves - Imobiliária</title>
+  <title>Consulta de Chaves - Imobiliária</title>
 
   <style>
     * {
@@ -19,12 +19,18 @@
       padding: 20px;
     }
 
+    main {
+      max-width: 1200px;
+      margin: auto;
+    }
+
     header {
       background: #111827;
       color: white;
       padding: 24px;
-      border-radius: 12px;
-      margin-bottom: 24px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
     header h1 {
@@ -35,44 +41,40 @@
     header p {
       color: #d1d5db;
       font-size: 15px;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-      margin-bottom: 20px;
+      line-height: 1.5;
     }
 
     .card {
       background: white;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 20px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
     }
 
     .card h2 {
       font-size: 20px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       color: #111827;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      gap: 12px;
+      align-items: end;
     }
 
     label {
       display: block;
       font-weight: bold;
-      margin-top: 12px;
       margin-bottom: 6px;
       color: #374151;
     }
 
     input, select {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       border-radius: 8px;
       border: 1px solid #cbd5e1;
       font-size: 15px;
@@ -86,20 +88,19 @@
     button {
       border: none;
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 11px 15px;
       font-size: 15px;
       cursor: pointer;
-      margin-top: 14px;
       font-weight: bold;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      opacity: 0.92;
     }
 
     .btn-primary {
       background: #2563eb;
-      color: white;
-    }
-
-    .btn-danger {
-      background: #dc2626;
       color: white;
     }
 
@@ -108,18 +109,21 @@
       color: white;
     }
 
-    .btn-secondary {
-      background: #6b7280;
-      color: white;
-    }
-
     .btn-warning {
       background: #d97706;
       color: white;
     }
 
-    button:hover {
-      opacity: 0.9;
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
     .message {
@@ -151,11 +155,30 @@
       border: 1px solid #93c5fd;
     }
 
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
       margin-bottom: 20px;
+    }
+
+    .summary-box {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .summary-box span {
+      display: block;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .summary-box strong {
+      font-size: 28px;
+      color: #111827;
     }
 
     .table-container {
@@ -166,7 +189,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
+      min-width: 900px;
       background: white;
     }
 
@@ -175,6 +198,7 @@
       padding: 10px;
       text-align: left;
       font-size: 14px;
+      vertical-align: top;
     }
 
     th {
@@ -196,11 +220,27 @@
       font-weight: bold;
     }
 
+    .empty {
+      padding: 18px;
+      color: #6b7280;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px dashed #d1d5db;
+      margin-top: 12px;
+    }
+
     .small-text {
       font-size: 13px;
       color: #6b7280;
-      margin-top: 8px;
-      line-height: 1.4;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .result-section-title {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-size: 17px;
+      color: #111827;
     }
 
     footer {
@@ -209,84 +249,106 @@
       text-align: center;
       font-size: 13px;
     }
+
+    @media (max-width: 780px) {
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <main>
     <header>
-      <h1>Gestão de Chaves - Imobiliária</h1>
-      <p>Painel simples para cadastro de funcionários, RFIDs, imóveis, aircodes e visualização de chaves livres ou em uso.</p>
+      <h1>Consulta de Chaves - Imobiliária</h1>
+      <p>
+        Painel simples apenas para consulta. Pesquise por aircode, RFID ou nome do funcionário, ou liste todas as chaves livres e ocupadas.
+      </p>
     </header>
 
     <div id="messageBox" class="message"></div>
 
-    <div class="toolbar">
-      <button class="btn-secondary" onclick="loadAllData()">Atualizar listas</button>
-      <button class="btn-success" onclick="showFreeKeys()">Ver chaves livres</button>
-      <button class="btn-warning" onclick="showUsedKeys()">Ver chaves em uso</button>
-      <button class="btn-secondary" onclick="showAllKeys()">Ver todas as chaves</button>
-    </div>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Cadastrar funcionário</h2>
-
-        <label for="employeeName">Nome do funcionário</label>
-        <input id="employeeName" type="text" placeholder="Ex.: Joao Silva" />
-
-        <label for="employeeId">ID do funcionário</label>
-        <input id="employeeId" type="text" placeholder="Ex.: EMP001" />
-
-        <label for="employeeRFID">Número do RFID</label>
-        <input id="employeeRFID" type="text" placeholder="Ex.: 14A1B2C3D4E5F1" />
-
-        <button class="btn-primary" onclick="registerEmployee()">Cadastrar funcionário</button>
-
-        <p class="small-text">
-          O sistema salva o RFID no formato <strong>RFID_NUMERO</strong>. Se você digitar apenas o número, o prefixo será adicionado automaticamente.
-        </p>
+    <section class="summary-grid">
+      <div class="summary-box">
+        <span>Total de imóveis/chaves</span>
+        <strong id="totalKeys">0</strong>
       </div>
 
-      <div class="card">
-        <h2>Excluir funcionário / liberar RFID</h2>
-
-        <label for="deleteRFID">Número do RFID</label>
-        <input id="deleteRFID" type="text" placeholder="Ex.: 14A1B2C3D4E5F1" />
-
-        <button class="btn-danger" onclick="deleteEmployee()">Excluir funcionário</button>
-
-        <p class="small-text">
-          Esta ação remove o objeto do funcionário em <strong>/rfids/RFID_xxx</strong>. Assim, o número do RFID fica livre para novo cadastro.
-        </p>
+      <div class="summary-box">
+        <span>Chaves livres</span>
+        <strong id="freeKeys">0</strong>
       </div>
 
-      <div class="card">
-        <h2>Cadastrar imóvel e aircode</h2>
+      <div class="summary-box">
+        <span>Chaves ocupadas</span>
+        <strong id="usedKeys">0</strong>
+      </div>
 
-        <label for="aircode">Aircode</label>
-        <input id="aircode" type="text" placeholder="Ex.: CASA001" />
-
-        <label for="address">Endereço</label>
-        <input id="address" type="text" placeholder="Ex.: Rua A, numero 123" />
-
-        <label for="lockId">Trava física associada</label>
-        <select id="lockId">
-          <option value="1">Trava 1</option>
-          <option value="2">Trava 2</option>
-          <option value="3">Trava 3</option>
-        </select>
-
-        <button class="btn-primary" onclick="registerProperty()">Cadastrar imóvel</button>
-
-        <p class="small-text">
-          O aircode será salvo em <strong>/aircodes/AIRCODE</strong> com status inicial <strong>free</strong>.
-        </p>
+      <div class="summary-box">
+        <span>Funcionários cadastrados</span>
+        <strong id="totalEmployees">0</strong>
       </div>
     </section>
 
     <section class="card">
-      <h2 id="tableTitle">Lista de chaves</h2>
+      <h2>Pesquisar</h2>
+
+      <div class="search-grid">
+        <div>
+          <label for="searchType">Tipo de consulta</label>
+          <select id="searchType">
+            <option value="aircode">Aircode</option>
+            <option value="rfid">RFID</option>
+            <option value="name">Nome do funcionário</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="searchInput">Valor</label>
+          <input id="searchInput" type="text" placeholder="Ex.: CASA001, 14A1B2C3D4E5F1 ou Joao" onkeydown="handleEnter(event)" />
+        </div>
+
+        <button class="btn-primary" onclick="searchData()">Pesquisar</button>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn-success" onclick="showFreeKeys()">Ver tudo livre</button>
+        <button class="btn-warning" onclick="showUsedKeys()">Ver tudo ocupado</button>
+        <button class="btn-secondary" onclick="showAllKeys()">Ver todas as chaves</button>
+        <button class="btn-secondary" onclick="loadAllData()">Atualizar dados</button>
+      </div>
+
+      <p class="small-text">
+        Para RFID, você pode digitar com ou sem o prefixo <strong>RFID_</strong>. Exemplo: <strong>14A1B2C3D4E5F1</strong> ou <strong>RFID_14A1B2C3D4E5F1</strong>.
+      </p>
+    </section>
+
+    <section class="card" id="employeeResultCard" style="display: none;">
+      <h2>Resultado de funcionário</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>RFID</th>
+              <th>Nome</th>
+              <th>ID funcionário</th>
+              <th>Ativo</th>
+              <th>Criado em</th>
+              <th>Última atualização</th>
+            </tr>
+          </thead>
+          <tbody id="employeesTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 id="tableTitle">Resultado da consulta</h2>
       <div class="table-container">
         <table>
           <thead>
@@ -300,12 +362,11 @@
               <th>Último empréstimo</th>
               <th>Última devolução</th>
               <th>Última atualização</th>
-              <th>Ação</th>
             </tr>
           </thead>
           <tbody id="keysTableBody">
             <tr>
-              <td colspan="10">Clique em "Atualizar listas" para carregar os dados.</td>
+              <td colspan="9">Carregando dados...</td>
             </tr>
           </tbody>
         </table>
@@ -313,19 +374,20 @@
     </section>
 
     <footer>
-      Site estático para GitHub Pages + Firebase Realtime Database.
+      Site estático de consulta para GitHub Pages + Firebase Realtime Database.
     </footer>
   </main>
 
   <script>
     // =========================================================
-    // CONFIGURAÇÕES DO FIREBASE DO SEU TESTE
+    // CONFIGURAÇÕES DO FIREBASE DO TESTE
     // =========================================================
 
     const FIREBASE_URL = "https://key-management-99c24-default-rtdb.europe-west1.firebasedatabase.app";
     const FIREBASE_AUTH = "IQFvqcBUUXN8G8BW8gj8iN1EgDInoXU6ZlfcTOHJ";
 
     let allAircodes = {};
+    let allEmployees = {};
 
     // =========================================================
     // FUNÇÕES AUXILIARES
@@ -357,6 +419,14 @@
       return String(value || "").trim().toUpperCase();
     }
 
+    function normalizeText(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
     function showMessage(text, type = "info") {
       const box = document.getElementById("messageBox");
       box.className = `message ${type}`;
@@ -386,21 +456,15 @@
       return new Date(numericValue).toLocaleString("pt-BR");
     }
 
-    async function firebaseRequest(path, method = "GET", body = null) {
-      const options = {
-        method: method,
+    async function firebaseGET(path) {
+      const response = await fetch(makeFirebaseUrl(path), {
+        method: "GET",
         headers: {
           "Content-Type": "application/json"
         }
-      };
+      });
 
-      if (body !== null) {
-        options.body = JSON.stringify(body);
-      }
-
-      const response = await fetch(makeFirebaseUrl(path), options);
       const text = await response.text();
-
       let data = null;
 
       try {
@@ -416,111 +480,9 @@
       return data;
     }
 
-    function clearEmployeeForm() {
-      document.getElementById("employeeName").value = "";
-      document.getElementById("employeeId").value = "";
-      document.getElementById("employeeRFID").value = "";
-    }
-
-    function clearPropertyForm() {
-      document.getElementById("aircode").value = "";
-      document.getElementById("address").value = "";
-      document.getElementById("lockId").value = "1";
-    }
-
-    // =========================================================
-    // CADASTRAR FUNCIONÁRIO
-    // =========================================================
-
-    async function registerEmployee() {
-      const name = document.getElementById("employeeName").value.trim();
-      const employeeId = document.getElementById("employeeId").value.trim();
-      const rfid = normalizeRFID(document.getElementById("employeeRFID").value);
-
-      if (!name || !employeeId || !rfid) {
-        showMessage("Preencha nome, ID do funcionário e RFID.", "error");
-        return;
-      }
-
-      const payload = {
-        name: name,
-        employee_id: employeeId,
-        active: true,
-        created_at: { ".sv": "timestamp" },
-        last_update: { ".sv": "timestamp" }
-      };
-
-      try {
-        await firebaseRequest(`/rfids/${rfid}`, "PUT", payload);
-        showMessage(`Funcionário cadastrado com sucesso no RFID ${rfid}.`, "success");
-        clearEmployeeForm();
-      } catch (error) {
-        console.error(error);
-        showMessage("Erro ao cadastrar funcionário: " + error.message, "error");
-      }
-    }
-
-    // =========================================================
-    // EXCLUIR FUNCIONÁRIO / LIBERAR RFID
-    // =========================================================
-
-    async function deleteEmployee() {
-      const rfid = normalizeRFID(document.getElementById("deleteRFID").value);
-
-      if (!rfid) {
-        showMessage("Digite o RFID que será liberado.", "error");
-        return;
-      }
-
-      const confirmDelete = confirm(`Deseja realmente excluir o funcionário vinculado a ${rfid}?`);
-
-      if (!confirmDelete) {
-        return;
-      }
-
-      try {
-        await firebaseRequest(`/rfids/${rfid}`, "DELETE");
-        showMessage(`Funcionário excluído. RFID ${rfid} liberado.`, "success");
-        document.getElementById("deleteRFID").value = "";
-      } catch (error) {
-        console.error(error);
-        showMessage("Erro ao excluir funcionário: " + error.message, "error");
-      }
-    }
-
-    // =========================================================
-    // CADASTRAR IMÓVEL / AIRCODE
-    // =========================================================
-
-    async function registerProperty() {
-      const aircode = normalizeAircode(document.getElementById("aircode").value);
-      const address = document.getElementById("address").value.trim();
-      const lockId = Number(document.getElementById("lockId").value);
-
-      if (!aircode || !address || !lockId) {
-        showMessage("Preencha aircode, endereço e trava associada.", "error");
-        return;
-      }
-
-      const payload = {
-        address: address,
-        status: "free",
-        lock_id: lockId,
-        current_rfid: "",
-        current_user_name: "",
-        borrowed_at: "",
-        returned_at: "",
-        last_update: { ".sv": "timestamp" }
-      };
-
-      try {
-        await firebaseRequest(`/aircodes/${aircode}`, "PUT", payload);
-        showMessage(`Imóvel cadastrado com sucesso no aircode ${aircode}.`, "success");
-        clearPropertyForm();
-        await loadAllData();
-      } catch (error) {
-        console.error(error);
-        showMessage("Erro ao cadastrar imóvel: " + error.message, "error");
+    function handleEnter(event) {
+      if (event.key === "Enter") {
+        searchData();
       }
     }
 
@@ -530,9 +492,17 @@
 
     async function loadAllData() {
       try {
-        const data = await firebaseRequest("/aircodes", "GET");
-        allAircodes = data || {};
-        renderKeysTable(allAircodes, "Lista de todas as chaves");
+        const [aircodesData, employeesData] = await Promise.all([
+          firebaseGET("/aircodes"),
+          firebaseGET("/rfids")
+        ]);
+
+        allAircodes = aircodesData || {};
+        allEmployees = employeesData || {};
+
+        updateSummary();
+        renderEmployeesTable([]);
+        renderKeysTable(allAircodes, "Todas as chaves");
         showMessage("Dados atualizados com sucesso.", "success");
       } catch (error) {
         console.error(error);
@@ -540,37 +510,202 @@
       }
     }
 
-    function showFreeKeys() {
-      const filtered = {};
+    function updateSummary() {
+      const aircodeEntries = Object.entries(allAircodes || {});
+      const employeeEntries = Object.entries(allEmployees || {});
 
-      for (const aircode in allAircodes) {
-        if (allAircodes[aircode]?.status === "free") {
-          filtered[aircode] = allAircodes[aircode];
+      const freeCount = aircodeEntries.filter(([, item]) => item?.status === "free").length;
+      const usedCount = aircodeEntries.filter(([, item]) => item?.status === "in_use").length;
+
+      document.getElementById("totalKeys").textContent = aircodeEntries.length;
+      document.getElementById("freeKeys").textContent = freeCount;
+      document.getElementById("usedKeys").textContent = usedCount;
+      document.getElementById("totalEmployees").textContent = employeeEntries.length;
+    }
+
+    // =========================================================
+    // PESQUISAS
+    // =========================================================
+
+    function searchData() {
+      const type = document.getElementById("searchType").value;
+      const input = document.getElementById("searchInput").value.trim();
+
+      if (!input) {
+        showMessage("Digite um valor para pesquisar.", "error");
+        return;
+      }
+
+      if (type === "aircode") {
+        searchByAircode(input);
+      }
+
+      if (type === "rfid") {
+        searchByRFID(input);
+      }
+
+      if (type === "name") {
+        searchByEmployeeName(input);
+      }
+    }
+
+    function searchByAircode(value) {
+      const aircode = normalizeAircode(value);
+      const item = allAircodes[aircode];
+
+      renderEmployeesTable([]);
+
+      if (!item) {
+        renderKeysTable({}, `Resultado para aircode: ${aircode}`);
+        showMessage(`Nenhum imóvel encontrado com o aircode ${aircode}.`, "info");
+        return;
+      }
+
+      renderKeysTable({ [aircode]: item }, `Resultado para aircode: ${aircode}`);
+      showMessage(`Consulta realizada para o aircode ${aircode}.`, "success");
+    }
+
+    function searchByRFID(value) {
+      const rfid = normalizeRFID(value);
+      const employee = allEmployees[rfid];
+
+      const employeeResults = employee ? { [rfid]: employee } : {};
+      const keyResults = findKeysByRFID(rfid);
+
+      renderEmployeesTable(employeeResults);
+      renderKeysTable(keyResults, `Chaves vinculadas ao RFID: ${rfid}`);
+
+      if (!employee && Object.keys(keyResults).length === 0) {
+        showMessage(`Nenhum resultado encontrado para o RFID ${rfid}.`, "info");
+        return;
+      }
+
+      showMessage(`Consulta realizada para o RFID ${rfid}.`, "success");
+    }
+
+    function searchByEmployeeName(value) {
+      const search = normalizeText(value);
+      const employeeResults = {};
+      const rfidsFound = [];
+
+      for (const [rfid, employee] of Object.entries(allEmployees || {})) {
+        const name = normalizeText(employee?.name || "");
+
+        if (name.includes(search)) {
+          employeeResults[rfid] = employee;
+          rfidsFound.push(rfid);
         }
       }
 
-      renderKeysTable(filtered, "Chaves livres");
+      const keyResults = {};
+
+      for (const rfid of rfidsFound) {
+        const keys = findKeysByRFID(rfid);
+        Object.assign(keyResults, keys);
+      }
+
+      renderEmployeesTable(employeeResults);
+      renderKeysTable(keyResults, `Chaves vinculadas ao nome: ${value}`);
+
+      if (Object.keys(employeeResults).length === 0 && Object.keys(keyResults).length === 0) {
+        showMessage(`Nenhum funcionário encontrado com o nome "${value}".`, "info");
+        return;
+      }
+
+      showMessage(`Consulta realizada para o nome "${value}".`, "success");
+    }
+
+    function findKeysByRFID(rfid) {
+      const results = {};
+
+      for (const [aircode, item] of Object.entries(allAircodes || {})) {
+        if (item?.current_rfid === rfid) {
+          results[aircode] = item;
+        }
+      }
+
+      return results;
+    }
+
+    // =========================================================
+    // BOTÕES PRINCIPAIS
+    // =========================================================
+
+    function showFreeKeys() {
+      renderEmployeesTable([]);
+
+      const filtered = {};
+
+      for (const [aircode, item] of Object.entries(allAircodes || {})) {
+        if (item?.status === "free") {
+          filtered[aircode] = item;
+        }
+      }
+
+      renderKeysTable(filtered, "Todas as chaves livres");
+      showMessage("Lista de chaves livres carregada.", "success");
     }
 
     function showUsedKeys() {
+      renderEmployeesTable([]);
+
       const filtered = {};
 
-      for (const aircode in allAircodes) {
-        if (allAircodes[aircode]?.status === "in_use") {
-          filtered[aircode] = allAircodes[aircode];
+      for (const [aircode, item] of Object.entries(allAircodes || {})) {
+        if (item?.status === "in_use") {
+          filtered[aircode] = item;
         }
       }
 
-      renderKeysTable(filtered, "Chaves em uso");
+      renderKeysTable(filtered, "Todas as chaves ocupadas");
+      showMessage("Lista de chaves ocupadas carregada.", "success");
     }
 
     function showAllKeys() {
-      renderKeysTable(allAircodes, "Lista de todas as chaves");
+      renderEmployeesTable([]);
+      renderKeysTable(allAircodes, "Todas as chaves");
+      showMessage("Lista completa carregada.", "success");
     }
 
     // =========================================================
-    // RENDERIZAR TABELA
+    // RENDERIZAÇÃO DAS TABELAS
     // =========================================================
+
+    function renderEmployeesTable(data) {
+      const card = document.getElementById("employeeResultCard");
+      const tbody = document.getElementById("employeesTableBody");
+      tbody.innerHTML = "";
+
+      const entries = Array.isArray(data) ? [] : Object.entries(data || {});
+
+      if (entries.length === 0) {
+        card.style.display = "none";
+        return;
+      }
+
+      card.style.display = "block";
+
+      entries.sort((a, b) => {
+        const nameA = a[1]?.name || "";
+        const nameB = b[1]?.name || "";
+        return nameA.localeCompare(nameB);
+      });
+
+      for (const [rfid, employee] of entries) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${rfid}</td>
+          <td>${employee?.name || "-"}</td>
+          <td>${employee?.employee_id || "-"}</td>
+          <td>${employee?.active === false ? "Não" : "Sim"}</td>
+          <td>${formatTimestamp(employee?.created_at)}</td>
+          <td>${formatTimestamp(employee?.last_update)}</td>
+        `;
+
+        tbody.appendChild(row);
+      }
+    }
 
     function renderKeysTable(data, title) {
       document.getElementById("tableTitle").textContent = title;
@@ -583,7 +718,7 @@
       if (entries.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="10">Nenhum registro encontrado.</td>
+            <td colspan="9">Nenhum registro encontrado.</td>
           </tr>
         `;
         return;
@@ -592,65 +727,24 @@
       entries.sort((a, b) => a[0].localeCompare(b[0]));
 
       for (const [aircode, item] of entries) {
-        const statusText = item.status === "in_use" ? "Em uso" : "Livre";
-        const statusClass = item.status === "in_use" ? "status-in-use" : "status-free";
-
-        const actionButton = item.status === "in_use"
-          ? `<button class="btn-success" onclick="returnKey('${aircode}')">Finalizar / devolver</button>`
-          : "-";
+        const statusText = item?.status === "in_use" ? "Ocupada" : "Livre";
+        const statusClass = item?.status === "in_use" ? "status-in-use" : "status-free";
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
           <td>${aircode}</td>
-          <td>${item.address || "-"}</td>
+          <td>${item?.address || "-"}</td>
           <td class="${statusClass}">${statusText}</td>
-          <td>${item.lock_id || "-"}</td>
-          <td>${item.current_user_name || "-"}</td>
-          <td>${item.current_rfid || "-"}</td>
-          <td>${formatTimestamp(item.borrowed_at)}</td>
-          <td>${formatTimestamp(item.returned_at)}</td>
-          <td>${formatTimestamp(item.last_update)}</td>
-          <td>${actionButton}</td>
+          <td>${item?.lock_id || "-"}</td>
+          <td>${item?.current_user_name || "-"}</td>
+          <td>${item?.current_rfid || "-"}</td>
+          <td>${formatTimestamp(item?.borrowed_at)}</td>
+          <td>${formatTimestamp(item?.returned_at)}</td>
+          <td>${formatTimestamp(item?.last_update)}</td>
         `;
 
         tbody.appendChild(row);
-      }
-    }
-
-    // =========================================================
-    // FINALIZAR EMPRÉSTIMO / DEVOLVER CHAVE
-    // =========================================================
-
-    async function returnKey(aircode) {
-      const item = allAircodes[aircode];
-
-      if (!item) {
-        showMessage("Aircode não encontrado na lista local.", "error");
-        return;
-      }
-
-      const confirmReturn = confirm(`Confirmar devolução da chave ${aircode}?`);
-
-      if (!confirmReturn) {
-        return;
-      }
-
-      const payload = {
-        status: "free",
-        current_rfid: "",
-        current_user_name: "",
-        returned_at: { ".sv": "timestamp" },
-        last_update: { ".sv": "timestamp" }
-      };
-
-      try {
-        await firebaseRequest(`/aircodes/${aircode}`, "PATCH", payload);
-        showMessage(`Chave ${aircode} devolvida e marcada como livre.`, "success");
-        await loadAllData();
-      } catch (error) {
-        console.error(error);
-        showMessage("Erro ao devolver chave: " + error.message, "error");
       }
     }
 
